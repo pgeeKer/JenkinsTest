@@ -15,7 +15,7 @@ function show_usage() {
   echo "-c channel_name1,channel_name2, 指定渠道名字"
   echo "-n apk_name, 指定最后打包的apk的名字的识别字段,给fortest使用"
   echo "-v version_name, 指定apk的version_name"
-  echo "--switchOutdoorBeta, 开启跑步内测包的特定功能111"
+  echo "--switchOutdoorBeta, 开启跑步内测包的特定功能"
   echo "-h, show help"
   echo "*******************************************************************"
   echo ""
