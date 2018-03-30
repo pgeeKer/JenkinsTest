@@ -1,0 +1,73 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 26
+    defaultConfig {
+        applicationId "com.jenkins.demo"
+        minSdkVersion 15
+        targetSdkVersion 26
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+
+    signingConfigs {
+        release {
+            storeFile file("keystore.jks")
+            keyAlias "key0"
+            storePassword "key123456"
+            keyPassword "key123456"
+            v2SigningEnabled false
+        }
+    }
+
+    buildTypes {
+
+        debug {
+            defaultConfig {
+                minSdkVersion 21
+            }
+            buildConfigField "boolean", "ISRELEASE", "false"
+            buildConfigField "boolean", "IS_WATCH_FPS", "true"
+            // 这个参数会由命令行修改，makeForReleaseBeta.sh
+            buildConfigField "boolean", "SWITCH_OUTDOOR_BETA", getProjectProperty("switchOutdoorBeta", "false")
+            signingConfig signingConfigs.release
+            minifyEnabled false
+            debuggable true
+        }
+        fortest.initWith(debug)
+        fortest {
+            defaultConfig {
+                minSdkVersion 21
+            }
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            matchingFallbacks = ['debug', 'release']
+        }
+        // 带apm监控
+        beta.initWith(fortest)
+        beta {
+            debuggable false
+            buildConfigField "boolean", "ISRELEASE", "true"
+            matchingFallbacks = ['release']
+        }
+        release.initWith(beta)
+        release {
+            buildConfigField "boolean", "IS_WATCH_FPS", "false"
+        }
+    }
+}
+
+def getProjectProperty(String key, String defaultValue) {
+    def value = project.getProperties().get(key)
+    return value != null ? value : defaultValue
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation 'com.android.support:appcompat-v7:26.1.0'
+    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'com.android.support.test:runner:1.0.1'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
+}
