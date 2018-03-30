@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-storeFile="/etc/keep.jks" #Jenkins上Apk签名的地址
+storeFile="/etc/keystore.jks" #Jenkins上Apk签名的地址
 task_name="fortest" #默认打fortest包
 channel="" #channel1,channel2 打特定channel的包 渠道之间用","分隔，不能有空格
 apk_name=""
@@ -117,7 +117,7 @@ for_test(){
 build(){
     #打包
     rm -rf ./app/build/outputs/apk/*
-    cp $storeFile ./app/keep.jks
+    cp $storeFile ./app/keystore.jks
     get_build_task
     gradle_command="./gradlew clean ${task} -x lint --no-daemon"
     if [ -n "${switchOutdoorBeta}" ]; then
